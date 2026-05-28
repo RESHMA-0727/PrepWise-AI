@@ -15,7 +15,32 @@ export async function POST(req) {
       messages: [
         {
           role: "user",
-          content: `Create 5 multiple choice quiz questions with answers from these notes:\n${body.notes}`,
+          content: `
+Generate 3 MCQ quiz questions from these notes.
+
+IMPORTANT:
+- Return ONLY valid JSON
+- The answer must EXACTLY match one option text
+- Do NOT return A/B/C/D letters
+
+Format:
+
+[
+  {
+    "question": "Question here",
+    "options": [
+      "Option 1",
+      "Option 2",
+      "Option 3",
+      "Option 4"
+    ],
+    "answer": "Exact correct option text"
+  }
+]
+
+Notes:
+${body.notes}
+`,
         },
       ],
 
@@ -23,8 +48,16 @@ export async function POST(req) {
 
     });
 
+    const responseText = chatCompletion.choices[0].message.content;
+
+    const cleanedText = responseText
+      .replace(/```json/g, "")
+      .replace(/```/g, "");
+
+    const quizData = JSON.parse(cleanedText);
+
     return Response.json({
-      quiz: chatCompletion.choices[0].message.content,
+      quiz: quizData,
     });
 
   } catch (error) {

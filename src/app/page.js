@@ -6,247 +6,125 @@ export default function Home() {
 
   const [notes, setNotes] = useState("");
 
-  const [summary, setSummary] = useState("");
-  const [quiz, setQuiz] = useState("");
-  const [viva, setViva] = useState("");
-
-  const [summaryLoading, setSummaryLoading] = useState(false);
-  const [quizLoading, setQuizLoading] = useState(false);
-  const [vivaLoading, setVivaLoading] = useState(false);
-
-  const handleFileUpload = async (e) => {
-
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    const formData = new FormData();
-
-    formData.append("pdf", file);
-
-    try {
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      setNotes(data.text);
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-  const generateSummary = async () => {
-
-    if (!notes) return;
-
-    setSummaryLoading(true);
-
-    try {
-
-      const response = await fetch("/api/summarize", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ notes }),
-      });
-
-      const data = await response.json();
-
-      setSummary(data.summary || data.error);
-
-      setQuiz("");
-      setViva("");
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-    setSummaryLoading(false);
-  };
-
-  const generateQuiz = async () => {
-
-    if (!notes) return;
-
-    setQuizLoading(true);
-
-    try {
-
-      const response = await fetch("/api/quiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ notes }),
-      });
-
-      const data = await response.json();
-
-      setQuiz(data.quiz || data.error);
-
-      setSummary("");
-      setViva("");
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-    setQuizLoading(false);
-  };
-
-  const generateViva = async () => {
-
-    if (!notes) return;
-
-    setVivaLoading(true);
-
-    try {
-
-      const response = await fetch("/api/viva", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ notes }),
-      });
-
-      const data = await response.json();
-
-      setViva(data.viva || data.error);
-
-      setSummary("");
-      setQuiz("");
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-    setVivaLoading(false);
-  };
-
   return (
 
-    <main className="min-h-screen bg-black text-white flex items-center justify-center p-10">
+    <main className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-green-950 text-white overflow-hidden relative">
 
-      <div className="w-full max-w-5xl">
+      {/* Animated Glow Effects */}
 
-        <h1 className="text-6xl font-bold text-green-400 mb-4 text-center">
-          PrepWise AI
-        </h1>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/20 blur-[120px] rounded-full animate-pulse"></div>
 
-        <p className="text-gray-400 text-center text-xl mb-10">
-          Your AI-powered learning assistant for smarter exam preparation.
-        </p>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/20 blur-[120px] rounded-full animate-pulse"></div>
 
-        <div className="bg-zinc-900 p-8 rounded-3xl border border-zinc-700">
+      <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-purple-500/10 blur-[150px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
 
-          <h2 className="text-3xl font-semibold mb-6">
-            Paste Your Notes
-          </h2>
+      <div className="relative z-10 flex items-center justify-center p-10">
 
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={handleFileUpload}
-            className="mb-6"
-          />
+        <div className="w-full max-w-6xl">
 
-          <textarea
-            placeholder="Paste your engineering notes here..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full h-64 bg-black border border-zinc-700 rounded-2xl p-5 text-white outline-none"
-          />
+          {/* Hero Section */}
 
-          <div className="flex gap-4 mt-6 flex-wrap">
+          <div className="text-center mb-16 animate-fadeIn">
 
-            <button
-              onClick={generateSummary}
-              className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-2xl text-lg font-semibold"
-            >
-              {summaryLoading ? "Generating..." : "Generate Summary"}
-            </button>
+            <h1 className="text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 bg-clip-text text-transparent mb-6 drop-shadow-2xl animate-pulse">
+              PrepWise AI
+            </h1>
 
-            <button
-              onClick={generateQuiz}
-              className="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-2xl text-lg font-semibold"
-            >
-              {quizLoading ? "Generating..." : "Generate Quiz"}
-            </button>
-
-            <button
-              onClick={generateViva}
-              className="bg-purple-500 hover:bg-purple-600 px-8 py-4 rounded-2xl text-lg font-semibold"
-            >
-              {vivaLoading ? "Generating..." : "Viva Questions"}
-            </button>
+            <p className="text-gray-300 text-2xl max-w-4xl mx-auto leading-10">
+              Your AI-powered learning assistant for smarter exam preparation,
+              interactive quizzes, and viva practice.
+            </p>
 
           </div>
+
+          {/* Feature Cards */}
+
+          <div className="grid md:grid-cols-3 gap-8 mb-14">
+
+            <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl hover:scale-105 hover:border-green-400 transition-all duration-500 shadow-2xl">
+
+              <div className="text-5xl mb-5">📝</div>
+
+              <h2 className="text-3xl font-bold text-green-400 mb-4">
+                AI Summary
+              </h2>
+
+              <p className="text-gray-400 text-lg leading-8">
+                Generate simple and quick summaries from lengthy technical notes.
+              </p>
+
+            </div>
+
+            <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl hover:scale-105 hover:border-blue-400 transition-all duration-500 shadow-2xl">
+
+              <div className="text-5xl mb-5">🧠</div>
+
+              <h2 className="text-3xl font-bold text-blue-400 mb-4">
+                Interactive Quiz
+              </h2>
+
+              <p className="text-gray-400 text-lg leading-8">
+                Practice MCQs with instant correct/wrong feedback.
+              </p>
+
+            </div>
+
+            <div className="bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-3xl hover:scale-105 hover:border-purple-400 transition-all duration-500 shadow-2xl">
+
+              <div className="text-5xl mb-5">🎤</div>
+
+              <h2 className="text-3xl font-bold text-purple-400 mb-4">
+                Viva Questions
+              </h2>
+
+              <p className="text-gray-400 text-lg leading-8">
+                Prepare important viva and interview questions instantly.
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* Input Section */}
+
+          <div className="bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[40px] p-10 shadow-[0_0_50px_rgba(0,255,150,0.1)]">
+
+            <h2 className="text-4xl font-bold mb-8 text-center">
+              Paste Your Notes
+            </h2>
+
+            <textarea
+              placeholder="Paste your engineering notes here..."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full h-72 bg-black/40 border border-white/10 rounded-3xl p-6 text-lg text-white outline-none focus:border-green-400 transition-all duration-300"
+            />
+
+            <div className="flex flex-wrap justify-center gap-6 mt-8">
+
+              <button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:scale-110 transition-all duration-300 px-10 py-5 rounded-2xl text-xl font-bold shadow-[0_0_25px_rgba(0,255,150,0.5)]">
+                Generate Summary
+              </button>
+
+              <button className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:scale-110 transition-all duration-300 px-10 py-5 rounded-2xl text-xl font-bold shadow-[0_0_25px_rgba(0,150,255,0.5)]">
+                Generate Quiz
+              </button>
+
+              <button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:scale-110 transition-all duration-300 px-10 py-5 rounded-2xl text-xl font-bold shadow-[0_0_25px_rgba(180,0,255,0.5)]">
+                Viva Questions
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* Footer */}
+
+          <footer className="text-center mt-16 text-gray-500 text-lg">
+            Built with ❤️ using Next.js + Groq AI
+          </footer>
 
         </div>
-
-        {summary && (
-
-          <div className="bg-zinc-900 mt-10 p-8 rounded-3xl border border-zinc-700">
-
-            <h2 className="text-3xl font-bold text-green-400 mb-6">
-              AI Summary
-            </h2>
-
-            <p className="text-gray-300 whitespace-pre-line leading-8">
-              {summary}
-            </p>
-
-          </div>
-
-        )}
-
-        {quiz && (
-
-          <div className="bg-zinc-900 mt-10 p-8 rounded-3xl border border-zinc-700">
-
-            <h2 className="text-3xl font-bold text-blue-400 mb-6">
-              AI Quiz
-            </h2>
-
-            <p className="text-gray-300 whitespace-pre-line leading-8">
-              {quiz}
-            </p>
-
-          </div>
-
-        )}
-
-        {viva && (
-
-          <div className="bg-zinc-900 mt-10 p-8 rounded-3xl border border-zinc-700">
-
-            <h2 className="text-3xl font-bold text-purple-400 mb-6">
-              Viva Questions
-            </h2>
-
-            <p className="text-gray-300 whitespace-pre-line leading-8">
-              {viva}
-            </p>
-
-          </div>
-
-        )}
 
       </div>
 
